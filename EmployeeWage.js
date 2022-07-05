@@ -33,12 +33,14 @@ function calculateWage(empHours)
 {
     let empSalaryForAMonth = 0,employeeWageForADay = 0,empHours = 0,totalEmpHours = 0,totalWorkingDays = 0;
     let dailyWageArray = new Array();
+    let empWageMap = new Map();
     while(totalEmpHours < EMP_MAX_WORKINGHOURS && totalWorkingDays < EMP_MAX_WORKINGDAYS)
     {
         empCheck = Math.floor(Math.random() * 10) % 3;
         empHours = getEmpWorkingHours(empCheck);  
         employeeWageForADay = calculateWage(empHours);
         dailyWageArray.push(employeeWageForADay);
+        empWageMap.set(totalWorkingDays,employeeWageForADay);
         totalEmpHours = totalEmpHours + empHours;
         totalWorkingDays++;
     }
@@ -50,11 +52,11 @@ function calculateWage(empHours)
     console.log("Total Working Hours: " + totalEmpHours + "\nTotal Working Days: " + totalWorkingDays + "\nEmployee Salary for a Month: " + empSalaryForAMonth);
     
     //Reduce Method
-    function reduceFunction(employeeWageForADay,totalSalary)
+    function totalWages(employeeWageForADay,totalSalary)
     {
         return totalSalary = totalSalary + employeeWageForADay;
     }
-    let monthlyWageReduceMethod = dailyWageArray.reduce(reduceFunction, 0);
+    let monthlyWageReduceMethod = dailyWageArray.reduce(totalWages, 0);
     console.log("Total Working Hours : " + totalEmpHours + "\nTotal Working Days : " + totalWorkingDays + "\nEmployee Salary for a Month : " + monthlyWageReduceMethod);
     
     //Mapping Day and its Wage
@@ -101,5 +103,18 @@ function calculateWage(empHours)
         return presentDays;
     }
     let employeePresentDaysArray = dailyWageArray.reduce(employeePresentDays, 0);
-    console.log(employeePresentDaysArray);
+    console.log("Number of Days Employee present in a Month: " + employeePresentDaysArray);
+
+    //Storing Day and DailyWage along with TotalWage
+    dayCounter = 0;
+    empSalaryForAMonth = 0;
+    function dailyAndTotalWage(employeeWageForADay)
+    {
+        dayCounter++;
+        empSalaryForAMonth = empSalaryForAMonth + employeeWageForADay;
+        return dayCounter + " = " + employeeWageForADay + " = " + empSalaryForAMonth;
+    } 
+    let dailyAndTotalWageArray = dailyWageArray.map(dailyAndTotalWage);
+    console.log(dailyAndTotalWageArray);
+    console.log("Total Wage using Map Function: " + Array.from(empWageMap.values()).reduce(totalWages, 0));
 }
